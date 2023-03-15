@@ -12,15 +12,22 @@ st.markdown(f"<h2 style='text-align: left;'>Where are you starting from?</h2>", 
 input_address = st.text_input('Format: City, Region.')
 gkey=os.getenv('google_key')
 
-if st.button("Search you coordinates!"):
-    # Get the latitude and longitude from the first result in the response
-    start_point = requests.get(f'https://maps.googleapis.com/maps/api/geocode/json?address={input_address}&key={gkey}').json()['results'][0]['geometry']['location']
-    start_lat = start_point['lat']
-    start_lng = start_point['lng']
-    try:
-        st.markdown(f"<h3 style='text-align: left;'>The coordinates of {input_address} are ({start_lat}, {start_lng})</h3>", unsafe_allow_html=True)
-    except:
-        pass
+start_point=0
+try:
+    if st.button("Search you coordinates!"):
+        # Get the latitude and longitude from the first result in the response
+        start_point = requests.get(f'https://maps.googleapis.com/maps/api/geocode/json?address={input_address}&key={gkey}').json()['results'][0]['geometry']['location']
+        start_lat = start_point['lat']
+        start_lng = start_point['lng']
+        try:
+            st.markdown(f"<h4 style='text-align: left;'>The coordinates of {input_address} are ({start_lat}, {start_lng})</h4>", unsafe_allow_html=True)
+        except:
+            pass
+except:
+    pass
+
+
+
 
 st.write('---')
 
@@ -139,7 +146,8 @@ if st.button("Let's GO!"):
     possible_spots = sql.count_location(possible_locations,possible_spots)
     possible_spots = sql.assign_candidates(possible_spots,dict_filters)
     possible_spots = possible_spots[possible_spots['candidate']==1]
-    
+    st.dataframe(possible_spots)
+    possible_spots.to_pickle('data/proves.pickle')
 
 
     try:
