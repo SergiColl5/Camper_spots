@@ -4,6 +4,10 @@ import os
 from dotenv import load_dotenv
 import pandas as pd
 from geopy.distance import distance
+import googlemaps
+import folium
+from googlemaps import convert
+import numpy as np
 
 # Loading env variables
 load_dotenv()
@@ -19,6 +23,7 @@ connectionData=f"mysql+pymysql://{username}:{password}@{host}:{port}/{dbName}"
 
 
 engine = alch.create_engine(connectionData)
+
 
 #Uploading to sql any csv population dataset
 def uploading_csv_named(name):
@@ -119,3 +124,70 @@ def assign_candidates(df,dict_):
         
                     
     return df
+
+def nearest_neighbor(coordinates):
+    # Create a list to store the order of visited coordinates
+    order = []
+    
+    # Choose the starting coordinate as the first coordinate in the list
+    current_coord = coordinates[0]
+    order.append(current_coord)
+    
+    # Create a set to store the remaining unvisited coordinates
+    unvisited_coords = set(coordinates[1:])
+    
+    # While there are unvisited coordinates, choose the nearest neighbor and add it to the order
+    while unvisited_coords:
+        nearest_coord = min(unvisited_coords, key=lambda x: np.linalg.norm(np.array(x) - np.array(current_coord)))
+        order.append(nearest_coord)
+        current_coord = nearest_coord
+        unvisited_coords.remove(nearest_coord)
+    
+    return order
+
+
+def plot_route(dict_, df,key):
+    # Initialize the Google Maps client
+    gmaps = googlemaps.Client(key)
+
+    
+    # Create a list to store the locations in the order they will be visited
+    locations = []
+    start_point = (dict_['lat'],dict_['lng'])
+    route_map = folium.Map(start_point,zoom_start=10)
+    # Add the start point as the first location
+    locations.append(start_point)
+
+    for item, row in df.iterrows():
+        locations.append((row['lat'],row['lon']))
+        
+    ordered_locations = nearest_neighbor(locations)
+    ordered_locations.append(start_point)
+
+ 
+    for i in range(len(ordered_locations)-1):
+        directions_result = gmaps.directions(ordered_locations[i], ordered_locations[i+1], mode="driving",avoid='highways',region='ES')
+        route = []
+        
+        
+        for step in directions_result[0]['legs'][0]['steps']:
+            coordinates= googlemaps.convert.decode_polyline(step['polyline']['points'])
+            route.extend(coordinates)
+
+        polyline=[]
+
+        for coordinate in route:
+            polyline.append((coordinate['lat'],coordinate['lng']))
+
+        
+        folium.PolyLine(polyline, color='red').add_to(route_map)
+    
+    for i, coord in enumerate(ordered_locations):
+    # Create a marker with a custom icon
+        
+        marker = folium.Marker(location=coord, icon=folium.Icon(color='green',prefix='fa',icon='car-side'))
+                                                            
+    # Add the marker to the map
+        marker.add_to(route_map)
+        
+    return route_map

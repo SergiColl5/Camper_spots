@@ -234,3 +234,9 @@ if st.button("Let's GO!"):
             
     except:
         pass
+
+if st.button("Find the best route!"):
+     
+    route_map = sql.plot_route(start_point,possible_spots,gkey)
+    folium_static(route_map)
+
