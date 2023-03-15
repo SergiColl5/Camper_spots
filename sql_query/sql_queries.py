@@ -146,6 +146,7 @@ def nearest_neighbor(coordinates):
     return order
 
 
+
 def plot_route(dict_, df,key):
     # Initialize the Google Maps client
     gmaps = googlemaps.Client(key)
@@ -154,15 +155,35 @@ def plot_route(dict_, df,key):
     # Create a list to store the locations in the order they will be visited
     locations = []
     start_point = (dict_['lat'],dict_['lng'])
-    route_map = folium.Map(start_point,zoom_start=10)
+    route_map  = folium.FeatureGroup(name='Route!')
     # Add the start point as the first location
     locations.append(start_point)
 
+    spots_colors = {
+            'Parking lot day/night': 'blue',
+            'nan': 'gray',
+            'Camping': 'green',
+            'Picnic area': 'orange',
+            'Free motorhome area': 'purple',
+            'Daily parking lot only': 'lightblue',
+            'Private car park for campers': 'darkgreen',
+            'Paying motorhome area': 'darkpurple',
+            'Surrounded by nature': 'green',
+            'Rest area': 'lightblue',
+            'Extra services': 'yellow',
+            'Off road (4x4)': 'brown',
+            'On the farm (farm)': 'green',
+            'Service area without parking': 'blue',
+            'Homestays accommodation': 'red'}
+
     for item, row in df.iterrows():
         locations.append((row['lat'],row['lon']))
+        marker = folium.Marker(location=(row['lat'],row['lon']),popup=f"{row['night_category']}. Rating: {row['rating']}", icon=folium.Icon(color=spots_colors[row['night_category']],prefix='fa',icon='car-side'))
+        route_map.add_child(marker)
         
     ordered_locations = nearest_neighbor(locations)
     ordered_locations.append(start_point)
+    
 
  
     for i in range(len(ordered_locations)-1):
@@ -180,14 +201,7 @@ def plot_route(dict_, df,key):
             polyline.append((coordinate['lat'],coordinate['lng']))
 
         
-        folium.PolyLine(polyline, color='red').add_to(route_map)
+        route_map.add_child(folium.PolyLine(polyline, color='red').add_to(route_map))
     
-    for i, coord in enumerate(ordered_locations):
-    # Create a marker with a custom icon
-        
-        marker = folium.Marker(location=coord, icon=folium.Icon(color='green',prefix='fa',icon='car-side'))
-                                                            
-    # Add the marker to the map
-        marker.add_to(route_map)
         
     return route_map

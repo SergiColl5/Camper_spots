@@ -5,6 +5,7 @@ from streamlit_folium import folium_static
 import requests
 import os
 from dotenv import load_dotenv
+import pandas as pd
 load_dotenv()
 
 #Request the address of the starting point.
@@ -12,19 +13,28 @@ st.markdown(f"<h2 style='text-align: left;'>Where are you starting from?</h2>", 
 input_address = st.text_input('Format: City, Region.')
 gkey=os.getenv('google_key')
 
-start_point=0
-try:
-    if st.button("Search you coordinates!"):
+if 'start_point' not in st.session_state:
+    st.session_state['start_point'] = {}
+if 'possible_spots' not in st.session_state:
+    st.session_state['possible_spots'] = pd.DataFrame({})
+
+
+if st.button("Search you coordinates!"):
+
+    try:
+    
         # Get the latitude and longitude from the first result in the response
         start_point = requests.get(f'https://maps.googleapis.com/maps/api/geocode/json?address={input_address}&key={gkey}').json()['results'][0]['geometry']['location']
+        st.session_state['start_point'] = start_point
         start_lat = start_point['lat']
         start_lng = start_point['lng']
         try:
             st.markdown(f"<h4 style='text-align: left;'>The coordinates of {input_address} are ({start_lat}, {start_lng})</h4>", unsafe_allow_html=True)
         except:
+            st.markdown(f"<h4 style='text-align: left;'>Sorry! We didn't finde the coordinates for this place: {input_address}</h4>", unsafe_allow_html=True)
             pass
-except:
-    pass
+    except:
+        pass
 
 
 
@@ -130,7 +140,7 @@ st.write('---')
 
 
 
-dict_filters = {'start_point':start_point,
+dict_filters = {
                 'community':community,
                 'category':category,
                 'rating':rating,
@@ -146,8 +156,7 @@ if st.button("Let's GO!"):
     possible_spots = sql.count_location(possible_locations,possible_spots)
     possible_spots = sql.assign_candidates(possible_spots,dict_filters)
     possible_spots = possible_spots[possible_spots['candidate']==1]
-    st.dataframe(possible_spots)
-    possible_spots.to_pickle('data/proves.pickle')
+    st.session_state['possible_spots'] = possible_spots
 
 
     try:
@@ -192,51 +201,31 @@ if st.button("Let's GO!"):
         
     except:
         pass
+    df_selected = possible_spots[['night_category','address', 'rating', 'url']]
+    df_selected.columns = ['Category', 'Address', 'Rating', 'Url'] # Rename columns
 
-    try:
-    # create the map object
-       
-        spots_group = folium.FeatureGroup(name='Night Spots')
-        spots_colors = {
-            'Parking lot day/night': 'blue',
-            'nan': 'gray',
-            'Camping': 'green',
-            'Picnic area': 'orange',
-            'Free motorhome area': 'purple',
-            'Daily parking lot only': 'lightblue',
-            'Private car park for campers': 'darkgreen',
-            'Paying motorhome area': 'darkpurple',
-            'Surrounded by nature': 'green',
-            'Rest area': 'lightblue',
-            'Extra services': 'yellow',
-            'Off road (4x4)': 'brown',
-            'On the farm (farm)': 'green',
-            'Service area without parking': 'blue',
-            'Homestays accommodation': 'red'}
-        
-
-                       
-        for index, row in possible_spots.iterrows():
-            spots_group.add_child(folium.Marker(
-                location=[row['lat'], row['lon']],
-                icon=folium.Icon(color=spots_colors[row['night_category']],prefix='fa',icon='car-side'),
-                popup=f"{row['night_category']}. Rating:{row['rating']}"
-            ))
-        map_possible_locations.add_child(spots_group)
+    st.dataframe(df_selected)
     
-
+    try:
+        route_map = sql.plot_route(st.session_state['start_point'],possible_spots,gkey)
+        map_possible_locations.add_child(route_map)
+       
     except:
-        st.write('Something is wrong')
+        pass
+    
     try:
         folium.LayerControl(collapsed=False, position="topleft").add_to(map_possible_locations)
         folium_static(map_possible_locations)
-        
-            
+
+
     except:
         pass
+    
 
-if st.button("Find the best route!"):
+        
+ 
+            
+
      
-    route_map = sql.plot_route(start_point,possible_spots,gkey)
-    folium_static(route_map)
+    
 
