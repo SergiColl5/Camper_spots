@@ -26,8 +26,9 @@ st.write("""
         </style>
         """, unsafe_allow_html=True)
 
-
-st.markdown("<h1 style='text-align: center;'>🏔️ LET'S FIND YOUR PERFECT ROAD TRIP! 🏖️</h1>", unsafe_allow_html=True)
+st.markdown("<h1 style='text-align: center;'>🏔️ CAMPI QUI PUGUI! 🏖️</h1>", unsafe_allow_html=True)
+st.markdown('---')
+st.markdown("<h2 style='text-align: center;'>Let's find your perfect roadtrip! </h2>", unsafe_allow_html=True)
 
 
 picture_map = Image.open('images/road_picture.jpeg')
