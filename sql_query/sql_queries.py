@@ -223,7 +223,7 @@ def plot_route(dict_, df,key):
     # Iterate through the df to add each coordinate point to the map, with the category and rating as a pop up, following the color code.
     for item, row in df.iterrows():
         locations.append((row['lat'],row['lon']))
-        marker = folium.Marker(location=(row['lat'],row['lon']),popup=f"{row['night_category']}. Rating: {row['rating']}", icon=folium.Icon(color=spots_colors[row['night_category']],prefix='fa',icon='car-side'))
+        marker = folium.Marker(location=(row['lat'],row['lon']),popup=f"ID: {item}   Rating: {row['rating']}", icon=folium.Icon(color=spots_colors[row['night_category']],prefix='fa',icon='car-side'))
         route_map.add_child(marker)
     
     # Call the function nearest_neighbor so all coordinates are in the proper order to visit.

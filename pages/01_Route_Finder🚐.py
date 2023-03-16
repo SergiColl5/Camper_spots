@@ -26,14 +26,16 @@ st.write("""
         </style>
         """, unsafe_allow_html=True)
 
-st.title("🏔️ LET'S FIND YOUR PERFECT ROAD TRIP! 🏖️")
+
+st.markdown("<h1 style='text-align: center;'>🏔️ LET'S FIND YOUR PERFECT ROAD TRIP! 🏖️</h1>", unsafe_allow_html=True)
+
 
 picture_map = Image.open('images/road_picture.jpeg')
 st.image(picture_map,use_column_width=True)
 
 #Request the address of the starting point.
 st.markdown(f"<h2 style='text-align: center;'>Where are you starting from?</h2>", unsafe_allow_html=True)
-input_address = st.text_input('Write your place name with the format: City, Region. And click Search.')
+input_address = st.text_input('Write your place name with the format: City, Region. And click Search.','Sant Pol de Mar, Barcelona')
 gkey=os.getenv('google_key')
 
 #Store variables so they are kept each session.
@@ -79,7 +81,7 @@ community = st.multiselect(
     ['Cantabria', 'Cataluña', 'Valencia', 'Galicia', 'Navarra',
        'Extremadura', 'Aragon', 'Castilla-Leon', 'Andalucia',
        'Pais Vasco', 'La Rioja', 'Castilla-La Mancha', 'Asturias',
-       'Baleares', 'Madrid', 'Murcia'])
+       'Baleares', 'Madrid', 'Murcia'],'Cantabria')
 
 # Display the selection
 st.markdown(f"<h4 style='text-align: left;'>Your selection:</h4>", unsafe_allow_html=True)
@@ -107,7 +109,7 @@ category = st.multiselect('',
     ['natural parks', 'museums', 'castles', 'beaches', 'monuments',
        'historic sites', 'villages', 'towns', 'cities', 'markets',
        'festivals', 'wineries', 'cathedrals', 'palaces', 'mountains',
-       'traditional restaurant', 'cave'])
+       'traditional restaurant', 'cave'],'beaches')
 
 # Display the selection
 st.markdown(f"<h4 style='text-align: left;'>Your selection:</h4>", unsafe_allow_html=True)
@@ -130,7 +132,7 @@ st.markdown(f"<h2 style='text-align: center;'>Select the mínimum rating you wan
 
 rating = st.slider(
     '',
-    min_value=1.0, max_value=5.0,step=0.1)
+    min_value=1.0, max_value=5.0,step=0.1,value=4.0)
 
 # Display the selection
 
@@ -150,7 +152,7 @@ night_category = st.multiselect('',
        'Private car park for campers ', 'Paying motorhome area',
        'Surrounded by nature', 'Rest area', 'Extra services',
        'Off road (4x4)', 'On the farm (farm',
-       'Service area without parking', 'Homestays accommodation'])
+       'Service area without parking', 'Homestays accommodation'],'Surrounded by nature')
 
 # Display the selection
 
@@ -174,7 +176,7 @@ st.markdown(f"<h2 style='text-align: center;'>How far apart do you want your nig
 
 max_dist = st.slider(
     '',
-    min_value=20, max_value=200, step=20)
+    min_value=20, max_value=200, step=20,value=40)
 
 st.markdown(f"<h4 style='text-align: left;'>Your distance between night spots:</h4>", unsafe_allow_html=True)
 st.markdown(f"<h3 style='text-align: left;'>{max_dist} km.</h3>", unsafe_allow_html=True)
@@ -224,7 +226,9 @@ if st.button("Let's GO!"):
     # Prepare the dataframe with the spots
     df_selected = possible_spots[['night_category','address', 'rating', 'url']]
     # Rename columns
-    df_selected.columns = ['Category', 'Address', 'Rating', 'Url'] 
+    df_selected.reset_index(inplace=True)
+    df_selected.columns = ['ID','Category', 'Address', 'Rating', 'Url']
+    
 
     # Create a markdown string to center the DataFrame
     centered_dataframe = f'<div style="display: flex; justify-content: center;">{df_selected.to_html(index=False)}</div>'
@@ -238,7 +242,7 @@ if st.button("Let's GO!"):
         map_possible_locations.add_child(route_map)
        
     except:
-        print('error amb la funció plot route')
+        print('Sorry, there was a problem finding good spots')
         pass
     
     try:
