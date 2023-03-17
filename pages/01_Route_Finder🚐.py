@@ -128,7 +128,7 @@ st.write('---')
 
 # Request the minimum rating desired
 
-st.markdown(f"<h2 style='text-align: center;'>Select the mínimum rating you want the places to have</h2>", unsafe_allow_html=True)
+st.markdown(f"<h2 style='text-align: center;'>Select the minimum rating you want the places to have</h2>", unsafe_allow_html=True)
 
 
 rating = st.slider(
