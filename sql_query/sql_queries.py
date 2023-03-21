@@ -221,6 +221,7 @@ def plot_route(dict_, df,key):
             'Homestays accommodation': 'red'}
 
     # Iterate through the df to add each coordinate point to the map, with the category and rating as a pop up, following the color code.
+        
     for item, row in df.iterrows():
         locations.append((row['lat'],row['lon']))
         marker = folium.Marker(location=(row['lat'],row['lon']),popup=f"ID: {item}   Rating: {row['rating']}", icon=folium.Icon(color=spots_colors[row['night_category']],prefix='fa',icon='car-side'))
@@ -288,6 +289,8 @@ def locations_group (df):
                 location=[row['lat'], row['lon']],
                 icon=folium.Icon(color=location_colors[row['category']],icon='circle'),
                 popup=row['Name']))
+        
+        
     return locations_group
 
 

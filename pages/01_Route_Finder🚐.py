@@ -229,10 +229,11 @@ if st.button("Let's GO!"):
     # Rename columns
     df_selected.reset_index(inplace=True)
     df_selected.columns = ['ID','Category', 'Address', 'Rating', 'Url']
+    df_selected['Url'] = df_selected['Url'].apply(lambda x: f'<a href="{x}" target="_blank">{x}</a>')
     
 
     # Create a markdown string to center the DataFrame
-    centered_dataframe = f'<div style="display: flex; justify-content: center;">{df_selected.to_html(index=False)}</div>'
+    centered_dataframe = f'<div style="display: flex; justify-content: center;">{df_selected.to_html(index=False,escape=False)}</div>'
 
     # Render the centered DataFrame using the st.markdown() function
     st.markdown(centered_dataframe, unsafe_allow_html=True) 
