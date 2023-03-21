@@ -1,6 +1,8 @@
 import requests
 from bs4 import BeautifulSoup
 import pandas as pd
+from pymongo import MongoClient
+from geopy.geocoders import Nominatim
 
 
 def get_park_spots(start_index):
@@ -19,6 +21,8 @@ def get_park_spots(start_index):
 
                 dict_response[i] = response
     return dict_response
+
+
 
 def extract_spot_info(dict_response):
     list_of_spots=[]
@@ -83,3 +87,30 @@ def extract_spot_info(dict_response):
         list_of_spots.append(dict_park_to_add)
         df_spots = pd.DataFrame(list_of_spots)
         #df_spots.to_csv('data/park_spots_1.csv')
+
+
+def get_community_sphere(lat, lon):
+
+    client = MongoClient("localhost:27017")
+    db = client['camper']
+    geography = db.get_collection('spain_geography')
+    location = [round(lon, 4), round(lat, 4)]
+    point = {
+        "type": "Point",
+        "coordinates": location
+    }
+
+    result=  geography.find_one(
+        {
+            "geometry": {
+                "$nearSphere": {
+                    "$geometry": point,
+                    "$maxDistance": 20000
+                }
+            }
+        },
+        projection={"properties.name": 1, "_id": 0})
+    if result==None:
+        return 'Not found'
+    else:
+        return result['properties']['name']

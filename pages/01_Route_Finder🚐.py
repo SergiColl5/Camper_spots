@@ -209,7 +209,7 @@ if st.button("Let's GO!"):
     # Display the results 
     try:
 
-        st.markdown(f"<h2 style='text-align: left;'>🚐 Here you have all the spots we found! 🚐</h2>", unsafe_allow_html=True)
+        st.markdown(f"<h2 style='text-align: center;'>🚐 Here you have all the spots we found! 🚐</h2>", unsafe_allow_html=True)
             # Define the map
         map_possible_locations = folium.Map(location=[possible_locations['lat'].mean(), possible_locations['lon'].mean()], zoom_start=8)
 
