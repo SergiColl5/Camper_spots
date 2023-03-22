@@ -1,5 +1,7 @@
 # CAMPI QUI PUGUI!
 
+![Campers](https://github.com/SergiColl5/Camper_spots/blob/main/images/cover_camper.jpeg)
+
 I am a camper enthusiast. I really like a nice road trip. And being able to carry around your home is concept of travelling that I love.
 
 Sometimes though, is not that easy to find the best route, the best places to visit or (the most difficult one) the best places to spend the night. At least that’s what most in the sector say. 
@@ -15,6 +17,7 @@ Campi qui pugui!
 An application where you can specify your starting locations, choose some preferences like the type of places you want to visit or the type of spots where you want to spend the night.
 The application will provide you with a map where you can see the route, the locations and the spots that suits best your preferences and also the link to the places at Park4night. Basically, is planning for you the best route!
 
+![Road](https://github.com/SergiColl5/Camper_spots/blob/main/images/road_picture.jpeg)
 
 To achieve this goal, I had to go through 5 steps:
 
