@@ -85,7 +85,7 @@ In the end the user will be selecting once, but the queries will be done to diff
 
 After that, I have all possible candidates, in one side the points of interest, in the other side the possible night spots.
 
-##4.	Calculations
+## 4.	Calculations
 
 This is the most challenging part. I needed to create the algorithm that returned the perfect night spots depending on three main things: the amounts of points of interest around, the rating of the spot, and the distance between spots.
 
