@@ -1,4 +1,4 @@
-#CAMPI QUI PUGUI!
+# CAMPI QUI PUGUI!
 
 I am a camper enthusiast. I really like a nice road trip. And being able to carry around your home is concept of travelling that I love.
 
@@ -22,7 +22,7 @@ To achieve this goal, I had to go through 5 steps:
 	
 
 
-##1.	Data extraction
+## 1.	Data extraction
 
 First and most important of it all. What data do I need? Where can I extract it from? How can I do that?
 
@@ -57,7 +57,7 @@ For the web scraping part, the code needs to be built to prevent possible errors
 
 
 
-##2.	Data cleaning
+## 2.	Data cleaning
 
 Once all the information is gathered, a proper cleaning must be done. In this case, it consisted of grouping and naming the categories, change the format of the coordinates, change the format of the rating, and get rid of those rows that contained null values in the coordinates field.
 
@@ -67,7 +67,7 @@ This added information consisted in finding the region within Spain that the dif
 
 
 
-##3.	Filtering
+## 3.	Filtering
 
 I let the user choose and filter different parameters.
 -	Starting point.
@@ -97,12 +97,12 @@ This was complicated because it changes depending based on filters provided by t
 
 For example, if I choose to see mountains or beaches in Cantabria, the spots that I receive might not be the same. Could happen as well depending on the minimum rating.
 
-##5.	Display result
+## 5.	Display result
 
 For now, I have created a Folium map where all the points of interest and night spots can be located. Extra information appears if the marker is clicked. 
 Also, a list of the spots with basic information and the link to its endpoint within Park4Night, so the user can check comments or more specific information. 
 
-##6.	Next Steps
+## 6.	Next Steps
 
 To continue this project, I’ll partner with my brother, who is an excellent UX/UI designer and Web Developer to create a proper website so we can help all the camper lovers. 
 I would also like to improve the pipeline for the data extraction and make it more robust and efficient. 
