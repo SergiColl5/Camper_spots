@@ -1,3 +1,5 @@
+CAMPI QUI PUGUI!
+
 I am a camper enthusiast. I really like a nice road trip. And being able to carry around your home is concept of travelling that I love.
 
 Sometimes though, is not that easy to find the best route, the best places to visit or (the most difficult one) the best places to spend the night. At least that’s what most in the sector say. 
